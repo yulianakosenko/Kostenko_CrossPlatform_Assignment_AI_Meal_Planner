@@ -80,8 +80,8 @@ export default function SummaryScreen({ route, navigation }) {
 
         <View style={styles.buttonSection}>
           <PrimaryButton
-            title="Open Meal Plan"
-            onPress={() => navigation.navigate("meal")}
+            title="Open History"
+            onPress={() => navigation.navigate("history")}
           />
         </View>
       </ScrollView>

@@ -1,18 +1,30 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 
 import AppStatusBar from "../components/AppStatusBar";
+import BottomTabBar from "../components/BottomTabBar";
 import PrimaryButton from "../components/PrimaryButton";
 import ScreenHeader from "../components/ScreenHeader";
 
 import { COLORS, SHADOW, SPACING } from "../constants/theme";
 
+import { tabs } from "../data/mockData";
+
 export default function ShoppingScreen({ navigation }) {
-  const products = [
+  const [products, setProducts] = useState([
     {
       id: 1,
       name: "Chicken Breast",
       amount: "800 g",
       price: "€8.50",
+      completed: false,
     },
 
     {
@@ -20,6 +32,7 @@ export default function ShoppingScreen({ navigation }) {
       name: "Avocado",
       amount: "4 pcs",
       price: "€5.20",
+      completed: false,
     },
 
     {
@@ -27,6 +40,7 @@ export default function ShoppingScreen({ navigation }) {
       name: "Greek Yogurt",
       amount: "1 kg",
       price: "€4.90",
+      completed: false,
     },
 
     {
@@ -34,8 +48,24 @@ export default function ShoppingScreen({ navigation }) {
       name: "Brown Rice",
       amount: "2 kg",
       price: "€6.10",
+      completed: false,
     },
-  ];
+  ]);
+
+  const toggleProduct = (id) => {
+    const updated = products.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            completed: !item.completed,
+          }
+        : item,
+    );
+
+    setProducts(updated);
+  };
+
+  const allCompleted = products.every((item) => item.completed);
 
   return (
     <View style={styles.container}>
@@ -60,7 +90,16 @@ export default function ShoppingScreen({ navigation }) {
         {products.map((item) => (
           <View key={item.id} style={styles.card}>
             <View style={styles.left}>
-              <View style={styles.checkbox} />
+              <TouchableOpacity
+                onPress={() => toggleProduct(item.id)}
+                style={[
+                  styles.checkbox,
+
+                  item.completed && styles.checkboxActive,
+                ]}
+              >
+                {item.completed && <Text style={styles.check}>✓</Text>}
+              </TouchableOpacity>
 
               <View>
                 <Text style={styles.name}>{item.name}</Text>
@@ -73,10 +112,45 @@ export default function ShoppingScreen({ navigation }) {
           </View>
         ))}
 
+        {allCompleted && (
+          <View style={styles.completedBox}>
+            <Text style={styles.completedText}>✅ Shopping Completed</Text>
+          </View>
+        )}
+
         <View style={styles.buttonSection}>
-          <PrimaryButton title="← Back" onPress={() => navigation.goBack()} />
+          <PrimaryButton
+            title="Open Summary"
+            onPress={() => navigation.navigate("summary")}
+          />
         </View>
       </ScrollView>
+
+      <BottomTabBar
+        activeTab="shopping"
+        onTabPress={(tab) => {
+          if (tab === "home") {
+            navigation.navigate("home");
+          }
+
+          if (tab === "shopping") {
+            navigation.navigate("shopping");
+          }
+
+          if (tab === "history") {
+            navigation.navigate("history");
+          }
+
+          if (tab === "meal") {
+            navigation.navigate("meal");
+          }
+
+          if (tab === "summary") {
+            navigation.navigate("summary");
+          }
+        }}
+        tabs={tabs}
+      />
     </View>
   );
 }
@@ -93,7 +167,7 @@ const styles = StyleSheet.create({
 
     paddingTop: SPACING.sm,
 
-    paddingBottom: 140,
+    paddingBottom: 160,
   },
 
   summaryCard: {
@@ -159,15 +233,29 @@ const styles = StyleSheet.create({
   },
 
   checkbox: {
-    width: 22,
+    width: 26,
 
-    height: 22,
+    height: 26,
 
     borderRadius: 999,
 
     borderWidth: 2,
 
     borderColor: COLORS.primary,
+  },
+
+  checkboxActive: {
+    backgroundColor: COLORS.primary,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+  },
+
+  check: {
+    color: "#fff",
+
+    fontWeight: "700",
   },
 
   name: {
@@ -194,8 +282,30 @@ const styles = StyleSheet.create({
     color: COLORS.primaryDark,
   },
 
+  completedBox: {
+    backgroundColor: COLORS.primarySoft,
+
+    padding: 18,
+
+    borderRadius: 20,
+
+    alignItems: "center",
+
+    marginTop: 10,
+
+    marginBottom: 20,
+  },
+
+  completedText: {
+    fontSize: 16,
+
+    fontWeight: "700",
+
+    color: COLORS.primaryDark,
+  },
+
   buttonSection: {
-    marginTop: 20,
+    marginTop: 10,
 
     marginBottom: 40,
   },

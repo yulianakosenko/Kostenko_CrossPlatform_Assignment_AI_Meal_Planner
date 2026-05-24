@@ -71,7 +71,7 @@ export default function ProcessingScreen({ navigation, route }) {
         });
 
         setTimeout(() => {
-          navigation.replace("summary", {
+          navigation.replace("meal", {
             ...plan,
 
             calories: data?.calories || "1800",
