@@ -148,37 +148,37 @@ History
 
 ## Home Screen
 
-![Home](./screenshots/home.png)
+![Home](./myApp/screenshots/home.png)
 
 ---
 
 ## Processing Screen
 
-![Processing](./screenshots/processing.png)
+![Processing](./myApp/screenshots/processing.png)
 
 ---
 
 ## Meal Plan Screen
 
-![Meal Plan](./screenshots/meal-plan.png)
+![Meal Plan](./myApp/screenshots/meal-plan.png)
 
 ---
 
 ## Shopping Screen
 
-![Shopping](./screenshots/shopping.png)
+![Shopping](./myApp/screenshots/shopping.png)
 
 ---
 
 ## Summary Screen
 
-![Summary](./screenshots/summary.png)
+![Summary](./myApp/screenshots/summary.png)
 
 ---
 
 ## History Screen
 
-![History](./screenshots/history.png)
+![Summary](./myApp/screenshots/summary.png)
 
 ---
 
