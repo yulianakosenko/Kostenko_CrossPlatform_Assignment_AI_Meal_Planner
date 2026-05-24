@@ -1,15 +1,12 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import AppStatusBar from "../components/AppStatusBar";
-import BottomTabBar from "../components/BottomTabBar";
 import PrimaryButton from "../components/PrimaryButton";
 import ScreenHeader from "../components/ScreenHeader";
 
 import { COLORS, SHADOW, SPACING } from "../constants/theme";
 
-import { tabs } from "../data/mockData";
-
-export default function ShoppingScreen({ setScreen }) {
+export default function ShoppingScreen({ navigation }) {
   const products = [
     {
       id: 1,
@@ -75,13 +72,11 @@ export default function ShoppingScreen({ setScreen }) {
             <Text style={styles.price}>{item.price}</Text>
           </View>
         ))}
+
+        <View style={styles.buttonSection}>
+          <PrimaryButton title="← Back" onPress={() => navigation.goBack()} />
+        </View>
       </ScrollView>
-
-      <View style={styles.buttonSection}>
-        <PrimaryButton title="Continue" onPress={() => setScreen("summary")} />
-      </View>
-
-      <BottomTabBar activeTab="shopping" onTabPress={setScreen} tabs={tabs} />
     </View>
   );
 }
@@ -165,6 +160,7 @@ const styles = StyleSheet.create({
 
   checkbox: {
     width: 22,
+
     height: 22,
 
     borderRadius: 999,
@@ -199,12 +195,8 @@ const styles = StyleSheet.create({
   },
 
   buttonSection: {
-    paddingHorizontal: SPACING.md,
+    marginTop: 20,
 
-    paddingTop: SPACING.sm,
-
-    paddingBottom: SPACING.lg,
-
-    backgroundColor: COLORS.background,
+    marginBottom: 40,
   },
 });

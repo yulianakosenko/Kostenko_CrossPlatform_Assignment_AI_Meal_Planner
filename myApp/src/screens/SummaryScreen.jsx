@@ -1,64 +1,116 @@
+import React from "react";
+
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+
+import { Ionicons, Feather } from "@expo/vector-icons";
 
 import AppStatusBar from "../components/AppStatusBar";
 import BottomTabBar from "../components/BottomTabBar";
+import PrimaryButton from "../components/PrimaryButton";
 import ScreenHeader from "../components/ScreenHeader";
 
 import { COLORS, SHADOW, SPACING } from "../constants/theme";
 
 import { tabs } from "../data/mockData";
 
-export default function SummaryScreen({ setScreen }) {
+export default function SummaryScreen({ route, navigation }) {
+  const { budget, people, days, calories, goal } = route.params || {};
+
   return (
     <View style={styles.container}>
       <AppStatusBar />
 
-      <ScreenHeader title="Summary" />
+      <ScreenHeader title="Plan Summary" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.heroCard}>
-          <Text style={styles.heroLabel}>Weekly Nutrition Score</Text>
+          <Text style={styles.heroLabel}>Estimated Budget Usage</Text>
 
-          <Text style={styles.heroScore}>92%</Text>
+          <Text style={styles.heroPrice}>€ {budget}</Text>
 
-          <Text style={styles.heroText}>
-            Your meal plan is balanced and optimized for healthy nutrition and
-            calorie goals.
+          <View style={styles.progressBar}>
+            <View style={styles.progressFill} />
+          </View>
+
+          <Text style={styles.heroSub}>
+            Your personalized healthy meal plan is ready
           </Text>
         </View>
 
-        <View style={styles.row}>
-          <View style={styles.smallCard}>
-            <Text style={styles.cardLabel}>Calories</Text>
+        <View style={styles.grid}>
+          <View style={styles.infoCard}>
+            <Ionicons name="people-outline" size={24} color={COLORS.primary} />
 
-            <Text style={styles.cardValue}>1800</Text>
+            <Text style={styles.infoValue}>{people}</Text>
 
-            <Text style={styles.cardSub}>per day</Text>
+            <Text style={styles.infoLabel}>People</Text>
           </View>
 
-          <View style={styles.smallCard}>
-            <Text style={styles.cardLabel}>Budget</Text>
+          <View style={styles.infoCard}>
+            <Ionicons
+              name="calendar-outline"
+              size={24}
+              color={COLORS.primary}
+            />
 
-            <Text style={styles.cardValue}>€70</Text>
+            <Text style={styles.infoValue}>{days}</Text>
 
-            <Text style={styles.cardSub}>weekly</Text>
+            <Text style={styles.infoLabel}>Days</Text>
+          </View>
+
+          <View style={styles.infoCard}>
+            <Ionicons name="flame-outline" size={24} color={COLORS.primary} />
+
+            <Text style={styles.infoValue}>{calories}</Text>
+
+            <Text style={styles.infoLabel}>Calories</Text>
+          </View>
+
+          <View style={styles.infoCard}>
+            <Feather name="target" size={24} color={COLORS.primary} />
+
+            <Text style={styles.infoValue}>{goal}</Text>
+
+            <Text style={styles.infoLabel}>Goal</Text>
           </View>
         </View>
 
-        <View style={styles.largeCard}>
-          <Text style={styles.largeTitle}>AI Recommendation</Text>
-
-          <Text style={styles.largeText}>
-            Increase protein intake slightly and maintain hydration for better
-            energy and recovery throughout the week.
-          </Text>
+        <View style={styles.buttonSection}>
+          <PrimaryButton
+            title="Open Meal Plan"
+            onPress={() => navigation.navigate("meal")}
+          />
         </View>
       </ScrollView>
 
-      <BottomTabBar activeTab="summary" onTabPress={setScreen} tabs={tabs} />
+      <BottomTabBar
+        activeTab="summary"
+        onTabPress={(tab) => {
+          if (tab === "home") {
+            navigation.navigate("home");
+          }
+
+          if (tab === "shopping") {
+            navigation.navigate("shopping");
+          }
+
+          if (tab === "history") {
+            navigation.navigate("history");
+          }
+
+          if (tab === "meal") {
+            navigation.navigate("meal");
+          }
+
+          if (tab === "summary") {
+            navigation.navigate("summary");
+          }
+        }}
+        tabs={tabs}
+      />
     </View>
   );
 }
@@ -73,15 +125,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: SPACING.md,
 
-    paddingTop: SPACING.sm,
-
-    paddingBottom: 140,
+    paddingBottom: 180,
   },
 
   heroCard: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primarySoft,
 
-    borderRadius: SPACING.xl,
+    borderRadius: 28,
 
     padding: SPACING.xl,
 
@@ -89,100 +139,94 @@ const styles = StyleSheet.create({
   },
 
   heroLabel: {
-    color: "#DFF7E7",
-
     fontSize: 15,
 
-    marginBottom: SPACING.sm,
+    color: COLORS.primaryDark,
+
+    marginBottom: 8,
   },
 
-  heroScore: {
-    fontSize: 54,
+  heroPrice: {
+    fontSize: 46,
 
     fontWeight: "700",
 
-    color: COLORS.white,
+    color: COLORS.primaryDark,
 
-    marginBottom: SPACING.sm,
+    marginBottom: 18,
   },
 
-  heroText: {
-    fontSize: 16,
+  progressBar: {
+    height: 12,
 
-    lineHeight: 28,
+    borderRadius: 999,
 
-    color: "#F4FFF7",
+    backgroundColor: "rgba(255,255,255,0.4)",
+
+    overflow: "hidden",
+
+    marginBottom: 14,
   },
 
-  row: {
+  progressFill: {
+    width: "72%",
+
+    height: "100%",
+
+    backgroundColor: COLORS.primary,
+  },
+
+  heroSub: {
+    fontSize: 15,
+
+    lineHeight: 24,
+
+    color: COLORS.textMuted,
+  },
+
+  grid: {
     flexDirection: "row",
 
-    gap: SPACING.md,
+    flexWrap: "wrap",
 
-    marginBottom: SPACING.lg,
+    justifyContent: "space-between",
+
+    gap: 14,
   },
 
-  smallCard: {
-    flex: 1,
+  infoCard: {
+    width: "47%",
 
     backgroundColor: COLORS.surface,
 
-    borderRadius: SPACING.xl,
+    borderRadius: 24,
 
-    padding: SPACING.lg,
+    padding: 22,
+
+    alignItems: "center",
 
     ...SHADOW,
   },
 
-  cardLabel: {
-    fontSize: 15,
-
-    color: COLORS.textMuted,
-
-    marginBottom: SPACING.sm,
-  },
-
-  cardValue: {
-    fontSize: 34,
+  infoValue: {
+    fontSize: 20,
 
     fontWeight: "700",
 
     color: COLORS.text,
 
-    marginBottom: 6,
+    marginTop: 12,
+
+    marginBottom: 4,
   },
 
-  cardSub: {
+  infoLabel: {
     fontSize: 14,
 
     color: COLORS.textMuted,
   },
 
-  largeCard: {
-    backgroundColor: COLORS.surface,
-
-    borderRadius: SPACING.xl,
-
-    padding: SPACING.xl,
-
-    ...SHADOW,
-  },
-
-  largeTitle: {
-    fontSize: 22,
-
-    fontWeight: "700",
-
-    color: COLORS.text,
-
-    marginBottom: SPACING.md,
-  },
-
-  largeText: {
-    fontSize: 16,
-
-    lineHeight: 28,
-
-    color: COLORS.textMuted,
+  buttonSection: {
+    marginTop: 28,
   },
 });

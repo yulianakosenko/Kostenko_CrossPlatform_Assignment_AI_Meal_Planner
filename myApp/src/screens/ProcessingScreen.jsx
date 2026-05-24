@@ -14,7 +14,9 @@ import { tabs } from "../data/mockData";
 import { generateMealPlanAI } from "../utils/realAI";
 import { saveMealPlan } from "../utils/storage";
 
-export default function ProcessingScreen({ setScreen, data, setData }) {
+export default function ProcessingScreen({ navigation, route }) {
+  const data = route.params;
+
   const dot1 = useRef(new Animated.Value(0.4)).current;
 
   const dot2 = useRef(new Animated.Value(0.4)).current;
@@ -27,14 +29,19 @@ export default function ProcessingScreen({ setScreen, data, setData }) {
         Animated.sequence([
           Animated.timing(animatedValue, {
             toValue: 1,
+
             duration: 500,
+
             delay,
+
             useNativeDriver: true,
           }),
 
           Animated.timing(animatedValue, {
             toValue: 0.4,
+
             duration: 500,
+
             useNativeDriver: true,
           }),
         ]),
@@ -49,16 +56,34 @@ export default function ProcessingScreen({ setScreen, data, setData }) {
       try {
         const plan = await generateMealPlanAI(data);
 
-        setData(plan);
         await saveMealPlan({
           ...plan,
 
           calories: data?.calories || "1800",
 
           days: data?.days || "7",
+
+          people: data?.people || "1",
+
+          budget: data?.budget || "50",
+
+          goal: data?.goal || "Balanced",
         });
+
         setTimeout(() => {
-          setScreen("meal");
+          navigation.replace("summary", {
+            ...plan,
+
+            calories: data?.calories || "1800",
+
+            days: data?.days || "7",
+
+            people: data?.people || "1",
+
+            budget: data?.budget || "50",
+
+            goal: data?.goal || "Balanced",
+          });
         }, 2200);
       } catch (error) {
         console.log(error);
@@ -89,7 +114,12 @@ export default function ProcessingScreen({ setScreen, data, setData }) {
               styles.loaderDot,
               {
                 opacity: dot1,
-                transform: [{ scale: dot1 }],
+
+                transform: [
+                  {
+                    scale: dot1,
+                  },
+                ],
               },
             ]}
           />
@@ -99,7 +129,12 @@ export default function ProcessingScreen({ setScreen, data, setData }) {
               styles.loaderDot,
               {
                 opacity: dot2,
-                transform: [{ scale: dot2 }],
+
+                transform: [
+                  {
+                    scale: dot2,
+                  },
+                ],
               },
             ]}
           />
@@ -109,14 +144,43 @@ export default function ProcessingScreen({ setScreen, data, setData }) {
               styles.loaderDot,
               {
                 opacity: dot3,
-                transform: [{ scale: dot3 }],
+
+                transform: [
+                  {
+                    scale: dot3,
+                  },
+                ],
               },
             ]}
           />
         </View>
       </View>
 
-      <BottomTabBar activeTab="meal" onTabPress={setScreen} tabs={tabs} />
+      <BottomTabBar
+        activeTab="meal"
+        onTabPress={(tab) => {
+          if (tab === "home") {
+            navigation.navigate("home");
+          }
+
+          if (tab === "shopping") {
+            navigation.navigate("shopping");
+          }
+
+          if (tab === "history") {
+            navigation.navigate("history");
+          }
+
+          if (tab === "meal") {
+            navigation.navigate("meal");
+          }
+
+          if (tab === "summary") {
+            navigation.navigate("summary");
+          }
+        }}
+        tabs={tabs}
+      />
     </LinearGradient>
   );
 }
@@ -130,6 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     justifyContent: "center",
+
     alignItems: "center",
 
     paddingHorizontal: SPACING.xl,
@@ -137,6 +202,7 @@ const styles = StyleSheet.create({
 
   circle: {
     width: 130,
+
     height: 130,
 
     borderRadius: 999,
@@ -144,6 +210,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primarySoft,
 
     justifyContent: "center",
+
     alignItems: "center",
 
     marginBottom: SPACING.xl,
@@ -187,6 +254,7 @@ const styles = StyleSheet.create({
 
   loaderDot: {
     width: 12,
+
     height: 12,
 
     borderRadius: 999,

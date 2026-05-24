@@ -12,7 +12,13 @@ import { COLORS, SPACING } from "../constants/theme";
 
 import { mealDays, tabs } from "../data/mockData";
 
-export default function MealPlanScreen({ setScreen }) {
+export default function MealPlanScreen({ navigation, route }) {
+  const historyItem = route?.params?.historyItem;
+
+  const currentCalories = historyItem?.calories || "1980";
+
+  const currentDays = historyItem?.days || "7";
+
   return (
     <View style={styles.container}>
       <AppStatusBar />
@@ -27,7 +33,8 @@ export default function MealPlanScreen({ setScreen }) {
         ListHeaderComponent={
           <View style={styles.noticeStrip}>
             <Text style={styles.noticeText}>
-              Balanced meals based on your nutrition goal and calorie intake
+              Balanced meals for {currentDays} days with approximately{" "}
+              {currentCalories} kcal per day
             </Text>
           </View>
         }
@@ -39,11 +46,35 @@ export default function MealPlanScreen({ setScreen }) {
       <View style={styles.buttonSection}>
         <PrimaryButton
           title="Generate Shopping List"
-          onPress={() => setScreen("shopping")}
+          onPress={() => navigation.navigate("shopping")}
         />
       </View>
 
-      <BottomTabBar activeTab="meal" onTabPress={setScreen} tabs={tabs} />
+      <BottomTabBar
+        activeTab="meal"
+        onTabPress={(tab) => {
+          if (tab === "home") {
+            navigation.navigate("home");
+          }
+
+          if (tab === "shopping") {
+            navigation.navigate("shopping");
+          }
+
+          if (tab === "history") {
+            navigation.navigate("history");
+          }
+
+          if (tab === "meal") {
+            navigation.navigate("meal");
+          }
+
+          if (tab === "summary") {
+            navigation.navigate("summary");
+          }
+        }}
+        tabs={tabs}
+      />
     </View>
   );
 }
@@ -93,7 +124,9 @@ const styles = StyleSheet.create({
     position: "absolute",
 
     left: 0,
+
     right: 0,
+
     bottom: 92,
 
     paddingHorizontal: SPACING.md,

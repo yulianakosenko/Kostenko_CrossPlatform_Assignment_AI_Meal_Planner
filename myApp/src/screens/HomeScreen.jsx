@@ -16,7 +16,7 @@ import { COLORS, SPACING } from "../constants/theme";
 
 import { nutritionGoals, tabs } from "../data/mockData";
 
-export default function HomeScreen({ setScreen, setData }) {
+export default function HomeScreen({ navigation }) {
   const [search, setSearch] = useState("");
 
   const [budget, setBudget] = useState("");
@@ -41,15 +41,13 @@ export default function HomeScreen({ setScreen, setData }) {
   const handleGenerate = () => {
     const selectedGoal = currentGoals.find((g) => g.active)?.label;
 
-    setData({
+    navigation.navigate("processing", {
       budget,
       people,
       days,
       calories,
       goal: selectedGoal,
     });
-
-    setScreen("processing");
   };
 
   return (
@@ -172,7 +170,31 @@ export default function HomeScreen({ setScreen, setData }) {
         </View>
       </ScrollView>
 
-      <BottomTabBar activeTab="home" onTabPress={setScreen} tabs={tabs} />
+      <BottomTabBar
+        activeTab="home"
+        onTabPress={(tab) => {
+          if (tab === "home") {
+            navigation.navigate("home");
+          }
+
+          if (tab === "shopping") {
+            navigation.navigate("shopping");
+          }
+
+          if (tab === "history") {
+            navigation.navigate("history");
+          }
+
+          if (tab === "meal") {
+            navigation.navigate("meal");
+          }
+
+          if (tab === "summary") {
+            navigation.navigate("summary");
+          }
+        }}
+        tabs={tabs}
+      />
     </View>
   );
 }
